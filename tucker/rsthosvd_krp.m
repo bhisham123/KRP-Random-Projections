@@ -5,14 +5,18 @@ function [T,times] = rsthosvd_krp(X,r,p, modes)
 %   X: original tensor (d modes)
 %   r: target rank vector [r1,...,rd]
 %   p: oversampling parameter
+%   modes: order of processing the modes/dimensions (list)
 
 % Outputs
-%   G: core tensor of size r
-%   U: cell array of factor matrices
-%
+%   T: Tucker tensor
+%   time : 1×5 vector with timing information:
+%                  [t_core, t_mtt, t_fact,t_rng, t_mat]
 
-sz = size(X);
-d = length(sz);
+
+% Written by Bhisham Dev Verma, 2025
+
+sz = size(X); %mode sizes
+d = length(sz); %number of modes
 if length(r) == 1
     r = r*ones(d,1);
 end
@@ -45,7 +49,7 @@ for n = modes
     tic;
     G = ttm(G,U,n,'t');    t_core = t_core + toc;
 end
-% return Tucker tensor
+% return Tucker tensor and time summary
 T = ttensor(G,U);
 times = [t_core, t_mtt, t_fact,t_rng, t_mat];
 end

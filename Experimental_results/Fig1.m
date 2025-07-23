@@ -30,9 +30,9 @@ figure;
 set(gcf, 'Position', [100, 100, 1000, 350]);  % [left, bottom, width, height]
 % ---- Subplot 1: Hausdorff Distance ----
 subplot(1,2,2)
-plot(Ranks, abs(avg_hd_krp),   'r*-', 'DisplayName', 'R-KRP',    'LineWidth', 2); hold on 
-plot(Ranks, abs(avg_hd_gauss), 'ks-', 'DisplayName', 'R-Gauss',  'LineWidth', 2); 
-plot(Ranks, abs(avg_hd_rsvd),   'bo-', 'DisplayName', 'RandERA',     'LineWidth', 2); 
+plot(Ranks, abs(avg_hd_krp),   'r*-', 'DisplayName', 'R-KRP', 'LineWidth', 2); hold on 
+plot(Ranks, abs(avg_hd_gauss), 'ks-', 'DisplayName', 'R-Gauss', 'LineWidth', 2); 
+plot(Ranks, abs(avg_hd_rsvd),   'bo-', 'DisplayName', 'RandERA', 'LineWidth', 2); 
 
 set(gca, 'FontSize', 14.8);
 xlabel('Rank (r)');
@@ -44,9 +44,9 @@ xticks(Ranks);
 
 % ---- Subplot 2: Average Runtime ----
 subplot(1,2,1)
-plot(Ranks, avg_krp,    'r*-', 'DisplayName', 'R-KRP',    'LineWidth', 2); hold on
-plot(Ranks, avg_gauss,  'ks-', 'DisplayName', 'R-Gauss',  'LineWidth', 2); 
-plot(Ranks, avg_rsvd,   'bo-', 'DisplayName', 'RandERA',     'LineWidth', 2); 
+plot(Ranks, avg_krp,    'r*-', 'DisplayName', 'R-KRP', 'LineWidth', 2); hold on
+plot(Ranks, avg_gauss,  'ks-', 'DisplayName', 'R-Gauss', 'LineWidth', 2); 
+plot(Ranks, avg_rsvd,   'bo-', 'DisplayName', 'RandERA', 'LineWidth', 2); 
 set(gca, 'FontSize', 14.8);
 xlabel('Rank (r)');
 ylabel('Average Runtime (Seconds)');
@@ -54,4 +54,9 @@ legend('show', 'Location', 'northwest');
 xticks(Ranks);
 title('Runtime')
 file_name = "Fig1.png";
-print(gcf, file_name, '-dpng', '-r300');
+% print(gcf, file_name, '-dpng', '-r300');
+
+disp("Speeedup over R-Gauss")
+avg_gauss./avg_krp
+disp("Speedup over R-RandERA")
+avg_rsvd./avg_krp

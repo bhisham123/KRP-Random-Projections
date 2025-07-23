@@ -1,5 +1,7 @@
 function [T,times] = hosvd1_old(X,r,modes)
 
+
+% store dimensions and properties
 sz = size(X);
 d = length(sz);
 
@@ -12,11 +14,6 @@ t_fact = 0;
 t_core = 0;
 
 for n = modes
-    % % Compute Gram matrix
-    % tic;
-    % M = double(tenmat(X,n));
-    % t_mult = t_mult+toc;
-
     tic;
      M = double(tenmat(X,n));
     t_mat = t_mat + toc;

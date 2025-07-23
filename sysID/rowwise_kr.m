@@ -8,7 +8,6 @@ if ~iscell(U), U = [{U} varargin];
 else U = [U varargin];
 end
 
-% Number of rows
 R = size(U{1}, 1);
 
 % Check all matrices have same number of rows

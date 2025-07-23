@@ -1,4 +1,19 @@
 function [T,times] = rhosvd(X,r,p,modes)
+% Randomized HOSVD 
+%
+% Inputs
+%   X: original tensor (d modes)
+%   r: target rank vector [r1,...,rd]
+%   p: oversampling parameter
+%   modes: order of processing the modes/dimensions (list)
+
+% Outputs
+%   T: Tucker tensor
+%   time : 1×5 vector with timing information:
+%                  [t_core, t_mtt, t_fact,t_rng, t_mat]
+
+
+% Written by Bhisham Dev Verma, 2025
 
 % store dimensions and properties
 dims = size(X);
@@ -38,7 +53,7 @@ tic;
     G = ttm(X,U,'t');
 t_core = t_core + toc;
 
-% return Tucker tensor
+% return Tucker tensor and time summary
 T = ttensor(G,U);
 times = [t_core,t_mult,t_fact,t_rng, t_mat];
 end

@@ -79,7 +79,7 @@ assert(norm(y1-y2)/norm(y1)<1e-14)
 %% Running time experiments
 for k =1:length(Ranks)
     r = Ranks(k);
-    disp(['Single-View Randomized SVD with Dense Gaussian at r = ',num2str(r)])
+    disp(['Single-View Randomized SVD with Dense Gaussian (R-Gauss) at r = ',num2str(r)])
     for i = 1:runs
         t1 = tic;
         [U1,S1,V1] = blockstructuredsvd_dense(mat, r);
@@ -90,7 +90,7 @@ for k =1:length(Ranks)
         hd_gauss(k,i) = hd;
     end
     
-    disp(['Single-View Randomized SVD with KRP structured random matrices at r = ',num2str(r)])
+    disp(['Single-View Randomized SVD with KRP structured random matrices (R-KRP) at r = ',num2str(r)])
     for i = 1:runs
         t2 = tic;
         [U2,S2,V2] = blockstructuredsvd_krp(mat, r);
@@ -101,7 +101,7 @@ for k =1:length(Ranks)
         hd_krp(k,i) = hd;
     end
         
-    disp(['RandSVD at r = ',num2str(r)])
+    disp(['RandERA at r = ',num2str(r)])
     for i = 1:runs
         t3 = tic;
         [A3,B3,C3,~] = impulse_era(markov,p,q,no,ni,r,'randsvd'); 
@@ -112,8 +112,8 @@ for k =1:length(Ranks)
     end
 end
 
-file_name = './Experimental_results/SysID_results.mat';
-save(file_name, 'Time_rsvd', 'Time_gauss', 'Time_krp', 'hd_rsvd', 'hd_gauss', 'hd_krp', 'Ranks');
+% file_name = './Experimental_results/SysID_results.mat';
+% save(file_name, 'Time_rsvd', 'Time_gauss', 'Time_krp', 'hd_rsvd', 'hd_gauss', 'hd_krp', 'Ranks');
 
 
 %% Ploting
@@ -141,9 +141,9 @@ figure;
 set(gcf, 'Position', [100, 100, 900, 300]);  % [left, bottom, width, height]
 % ---- Subplot 1: Hausdorff Distance ----
 subplot(1,2,2)
-plot(Ranks, abs(avg_hd_krp),   'r*-', 'DisplayName', 'R-KRP',    'LineWidth', 2); hold on 
-plot(Ranks, abs(avg_hd_gauss), 'ks-', 'DisplayName', 'R-Dense',  'LineWidth', 2); 
-plot(Ranks, abs(avg_hd_rsvd),   'bo-', 'DisplayName', 'RandSVD',     'LineWidth', 2); 
+plot(Ranks, abs(avg_hd_krp),   'r*-', 'DisplayName', 'R-KRP', 'LineWidth', 2); hold on 
+plot(Ranks, abs(avg_hd_gauss), 'ks-', 'DisplayName', 'R-Gauss', 'LineWidth', 2); 
+plot(Ranks, abs(avg_hd_rsvd),   'bo-', 'DisplayName', 'RandERA', 'LineWidth', 2); 
 
 set(gca, 'FontSize', 14.8);
 xlabel('Rank (r)');
@@ -155,9 +155,9 @@ xticks(Ranks);
 
 % ---- Subplot 2: Average Runtime ----
 subplot(1,2,1)
-plot(Ranks, avg_krp,    'r*-', 'DisplayName', 'R-KRP',    'LineWidth', 2); hold on
-plot(Ranks, avg_gauss,  'ks-', 'DisplayName', 'R-Dense',  'LineWidth', 2); 
-plot(Ranks, avg_rsvd,   'bo-', 'DisplayName', 'RandSVD',     'LineWidth', 2); 
+plot(Ranks, avg_krp,    'r*-', 'DisplayName', 'R-KRP', 'LineWidth', 2); hold on
+plot(Ranks, avg_gauss,  'ks-', 'DisplayName', 'R-Gauss', 'LineWidth', 2); 
+plot(Ranks, avg_rsvd,   'bo-', 'DisplayName', 'RandERA', 'LineWidth', 2); 
 
 set(gca, 'FontSize', 14.8);
 xlabel('Rank (r)');
@@ -169,15 +169,31 @@ title('Runtime')
 % file_name = "Fig1.png";
 % print(gcf, file_name, '-dpng', '-r300');
 
-%% Number of random numbers 
+%% Total random numbers generated (\ell_l = 2r and \ell_r = 2\ell_l+1)
 for i = 1:length(Ranks)
     r = Ranks(i);
     [m,n] = size(mat.M{1});
     [p,q] = size(mat.E{1});
+    ell_r = 2*r+1;
+    ell_l = 2*ell_r+1;
     rng1 = (n*q)*(r+20);
-    rng2 = (n+q)*(2*r+1) + (m+p)*(2*(2*r+1)+1);
-    rng3 = (n*q)*(2*r+1) + (m*p)*(2*(2*r+1)+1);
+    rng2 = (n+q)*ell_r + (m+p)*ell_l;
+    rng3 = (n*q)*ell_r + (m*p)*ell_l;
     % rng2/rng1;
     disp([num2str(r), ' ', num2str((rng2/rng1)*100), ' ', num2str((rng2/rng3)*100)]);
 end
 
+%% Total random number generated (\ell_l = r+20 and \ell_r = ceil(1.5*\ell_r)
+disp('\n')
+for i = 1:length(Ranks)
+    r = Ranks(i);
+    [m,n] = size(mat.M{1});
+    [p,q] = size(mat.E{1});
+    ell_r = r + 20;
+    ell_l = 1.5*ell_r;
+    rng1 = (n*q)*(r+20);
+    rng2 = (n+q)*ell_r + (m+p)*ell_l;
+    rng3 = (n*q)*ell_r + (m*p)*ell_l;
+    % rng2/rng1;
+    disp([num2str(r), ' ', num2str((rng2/rng1)*100), ' ', num2str((rng2/rng3)*100)]);
+end

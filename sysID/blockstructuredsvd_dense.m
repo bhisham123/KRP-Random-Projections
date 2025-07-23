@@ -14,10 +14,12 @@ function [U,S,V] = blockstructuredsvd_dense(mat, r)
     %     S - Diagonal matrix of top-r singular values (r x r)
     %     V - Approximate right singular vectors (size n*q x r)
 
+    % Written by Bhisham Dev Verma, 2025
+
     
     % Range sketch
-    ell  =  2*r + 1; 
-    % ell = r+20;
+    % ell  =  2*r + 1; 
+    ell = r+20;
     [p,q] = size(mat.E{1});
     [m,n] = size(mat.M{1});
     Omega = randn(n*q,ell); 
@@ -43,8 +45,8 @@ function [U,S,V] = blockstructuredsvd_dense(mat, r)
     
     
     % Corange sketch
-    ellp = 2*ell + 1; 
-    % ellp = ceil(1.5*ell); 
+    % ellp = 2*ell + 1; 
+    ellp = ceil(1.5*ell); 
     Psi = randn(m*p,ellp); 
     W = zeros(n*q,ellp);
     for k = 1:ellp

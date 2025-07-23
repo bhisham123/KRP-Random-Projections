@@ -1,8 +1,23 @@
 function [T, times] = rhosvd_krp_mttkrps(X,r,p,modes)
+% Randomized HOSVD with KRP random matrix based on memoization
+%
+% Inputs
+%   X: original tensor (d modes)
+%   r: target rank vector [r1,...,rd]
+%   p: oversampling parameter
+%   modes: order of processing the modes/dimensions (list)
+
+% Outputs
+%   T: Tucker tensor
+%   time : 1×5 vector with timing information:
+%                  [t_core, t_mtt, t_fact,t_rng, t_mat]
+
+
+% Written by Bhisham Dev Verma, 2025
 
 % store dimensions and properties
-dims = size(X);
-d = length(dims);
+dims = size(X); %mode sizes
+d = length(dims); %number of modes
 
 
 t_rng  =  0;

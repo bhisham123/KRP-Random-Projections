@@ -1,5 +1,20 @@
 function [T,times] = hosvd_gram(X,r,modes)
+% HOSVD method based on gram approach
 
+% Inputs
+%   X: original tensor (d modes)
+%   r: target rank vector [r1,...,rd]
+%   modes: order of processing the modes/dimensions (list)
+
+% Outputs
+%   T: Tucker tensor
+%   time : 1×5 vector with timing information:
+%                  [t_core, t_mtt, t_fact,t_rng, t_mat]
+
+
+% Written by Bhisham Dev Verma, 2025
+
+% store dimensions and properties
 sz = size(X);
 d = length(sz);
 

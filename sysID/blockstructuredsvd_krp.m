@@ -14,10 +14,11 @@ function [U,S,V] = blockstructuredsvd_krp(mat, r)
     %     S - Diagonal matrix of top-r singular values (r x r)
     %     V - Approximate right singular vectors (size n*q x r)
     
+    % Written by Bhisham Dev Verma, 2025
     
     % Range sketch
-    ell =  2*r + 1;  
-    % ell = r+20; 
+    % ell =  2*r + 1;  
+    ell = r+20; 
     Vlst = randn(ell,size(mat.E{1},2)); 
     Wlst = randn(ell,size(mat.M{1},2));
     p = length(mat.E{1});
@@ -41,8 +42,8 @@ function [U,S,V] = blockstructuredsvd_krp(mat, r)
     
     
     % Corange sketch
-    ellp = 2*ell + 1;  
-    % ellp = ceil(1.5*ell);  
+    % ellp = 2*ell + 1;  
+    ellp = ceil(1.5*ell);  
     Vlst = randn(ellp,size(mat.E{1},1)); 
     Wlst = randn(ellp,size(mat.M{1},1));
     Wt = zeros(ellp, size(mat.E{1},2)*size(mat.M{1},2));
